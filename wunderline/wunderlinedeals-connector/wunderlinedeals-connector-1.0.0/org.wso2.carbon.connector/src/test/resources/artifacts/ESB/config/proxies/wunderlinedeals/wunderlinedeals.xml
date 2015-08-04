@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="wunderlinedeals" startOnLoad="true" statistics="disable" trace="disable" transports="https,http" xmlns="http://ws.apache.org/ns/synapse">
+   <target>
+      <inSequence>
+         <property name="apiUrl" expression="json-eval($.apiUrl)"/>
+         <property name="apiKey" expression="json-eval($.apiKey)"/>
+         <property name="name" expression="json-eval($.name)"/>
+         <property name="description" expression="json-eval($.description)"/>
+         <property name="email" expression="json-eval($.email)"/>
+         <property name="website" expression="json-eval($.website)"/>
+         <property name="fax" expression="json-eval($.fax)"/>
+         <property name="city" expression="json-eval($.city)"/>
+         <property name="companyId" expression="json-eval($.companyId)"/>
+         <wunderlinedeals.init>
+            <apiUrl>{$ctx:apiUrl}</apiUrl>
+            <apiKey>{$ctx:apiKey}</apiKey>
+         </wunderlinedeals.init>
+         <switch source="get-property('transport','Action')">
+            <case regex="urn:createCompany">
+               <wunderlinedeals.createCompany>
+                  <name>{$ctx:name}</name>
+                  <description>{$ctx:description}</description>
+                  <email>{$ctx:email}</email>
+                  <website>{$ctx:website}</website>
+                  <fax>{$ctx:fax}</fax>
+                  <city>{$ctx:city}</city>
+               </wunderlinedeals.createCompany>
+            </case>
+            <case regex="urn:getCompany">
+               <wunderlinedeals.getCompany>
+                  <companyId>{$ctx:companyId}</companyId>
+               </wunderlinedeals.getCompany>
+            </case>
+            <case regex="urn:listCompanies">
+               <wunderlinedeals.listCompanies>
+               </wunderlinedeals.listCompanies>
+            </case>
+         </switch>
+         <respond/>
+      </inSequence>
+      <outSequence>
+         <log/>
+         <send/>
+      </outSequence>
+   </target>
+   <description/>
+</proxy>
